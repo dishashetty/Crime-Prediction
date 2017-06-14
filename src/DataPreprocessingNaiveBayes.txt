@@ -1,0 +1,22 @@
+- Run thefollowing commands in pyspark
+
+input = sc.textFile("Chicago_Crimes_updated.csv")
+
+# Write data to CSV file.
+def toCSVLine(data):
+  return ','.join(str(d) for d in data) 
+
+###### Data Pre processing ##############
+# Get the header which indicates the names of the column
+header = input.first()
+inputWithoutHeader = input.filter(lambda line : line!= header)  
+rddRaw = inputWithoutHeader.map(lambda line: line.split(','))
+# delete the rows for which 21st cell (latitude) is empty. 21st column is 20th position
+rdd =  rddRaw.filter(lambda x: x[20] is not u'')
+
+rddFinal = rdd.map(lambda line: (line[3],line[20],line[21]))
+lines = rddFinal.map(toCSVLine)
+lines.saveAsTextFile('DataPreprocessingNBOut')
+
+- Exit Pyspark and copy to home folder
+hdfs dfs -copyToLocal DataPreprocessingNBOut /users/sbilgund
