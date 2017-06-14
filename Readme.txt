@@ -1,4 +1,4 @@
-Link for project : http://webpages.uncc.edu/dshetty1/ 
+
 
 K means Clustering
 
